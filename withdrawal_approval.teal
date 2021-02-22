@@ -1,0 +1,249 @@
+#pragma version 2
+txn ApplicationID
+int 0
+==
+bnz branch_create
+txn OnCompletion
+int OptIn
+==
+bnz branch_opt_in
+txn OnCompletion
+int CloseOut
+==
+bnz branch_close_out
+txn OnCompletion
+int UpdateApplication
+==
+bnz branch_update
+txn OnCompletion
+int DeleteApplication
+==
+bnz branch_delete
+txn OnCompletion
+int NoOp
+==
+bnz branch_app_calls
+int 0
+return
+branch_create:
+byte "Creator"
+txn Sender
+app_global_put
+int 1
+return
+b end_program
+branch_opt_in:
+int 1
+return
+b end_program
+branch_close_out:
+int 1
+return
+b end_program
+branch_update:
+int 0
+return
+b end_program
+branch_delete:
+byte "Creator"
+app_global_get
+txn Sender
+==
+bnz is_creator
+int 0
+return
+b end_program
+is_creator:
+int 1
+return
+b end_program
+branch_app_calls:
+global GroupSize
+int 2
+==
+byte "Creator"
+app_global_get
+gtxn 0 Sender
+==
+&&
+bnz branch_withdrawal_setup
+global GroupSize
+int 2
+==
+gtxna 0 ApplicationArgs 0
+byte "Booking"
+==
+&&
+bnz branch_booking
+global GroupSize
+int 2
+==
+gtxna 0 ApplicationArgs 0
+byte "Withdrawal"
+==
+&&
+bnz branch_withdrawal
+int 0
+return
+branch_withdrawal_setup:
+gtxn 0 NumAppArgs
+int 2
+==
+gtxn 1 TypeEnum
+int axfer
+==
+&&
+gtxn 1 AssetReceiver
+gtxna 0 ApplicationArgs 0
+==
+&&
+gtxn 1 AssetAmount
+int 0
+>
+&&
+bnz withdrawal_setup
+int 0
+return
+b end_program
+withdrawal_setup:
+byte "AssetEscrow"
+gtxna 0 ApplicationArgs 0
+app_global_put
+byte "WithdrawalProcessingRounds"
+gtxna 0 ApplicationArgs 1
+btoi
+app_global_put
+byte "AssetID"
+gtxn 1 XferAsset
+app_global_put
+byte "WithdrawalBookableAmount"
+gtxn 1 AssetAmount
+app_global_put
+int 1
+return
+branch_booking:
+int 0
+gtxn 0 ApplicationID
+byte "WithdrawalBookingRound"
+app_local_get_ex
+store 0
+store 1
+load 0
+load 1
+int 0
+>
+&&
+bnz booking_failure
+gtxn 1 TypeEnum
+int axfer
+==
+gtxn 1 XferAsset
+byte "AssetID"
+app_global_get
+==
+&&
+gtxn 1 Sender
+gtxn 0 Sender
+==
+&&
+gtxn 1 AssetReceiver
+byte "AssetEscrow"
+app_global_get
+==
+&&
+gtxn 1 AssetAmount
+byte "WithdrawalBookableAmount"
+app_global_get
+<=
+&&
+bnz booking
+int 0
+return
+booking:
+int 0
+byte "WithdrawalBookingRound"
+global Round
+app_local_put
+int 0
+byte "WithdrawalBookedAmount"
+gtxn 1 AssetAmount
+app_local_put
+byte "WithdrawalBookableAmount"
+byte "WithdrawalBookableAmount"
+app_global_get
+gtxn 1 AssetAmount
+-
+app_global_put
+int 1
+return
+b end_booking
+booking_failure:
+int 0
+return
+end_booking:
+int 1
+return
+branch_withdrawal:
+int 0
+gtxn 0 ApplicationID
+byte "WithdrawalBookingRound"
+app_local_get_ex
+store 0
+store 1
+int 0
+gtxn 0 ApplicationID
+byte "WithdrawalBookedAmount"
+app_local_get_ex
+store 2
+store 3
+int 0
+gtxn 0 ApplicationID
+app_opted_in
+load 1
+int 0
+>
+&&
+load 3
+int 0
+>
+&&
+global Round
+int 0
+byte "WithdrawalBookingRound"
+app_local_get
+byte "WithdrawalProcessingRounds"
+app_global_get
++
+>=
+&&
+gtxn 1 XferAsset
+byte "AssetID"
+app_global_get
+==
+&&
+gtxn 1 Sender
+byte "AssetEscrow"
+app_global_get
+==
+&&
+gtxn 1 AssetAmount
+load 3
+int 2
+*
+==
+&&
+bnz withdrawal
+int 0
+return
+withdrawal:
+int 0
+byte "WithdrawalBookingRound"
+int 0
+app_local_put
+int 0
+byte "WithdrawalBookedAmount"
+int 0
+app_local_put
+int 1
+return
+end_program:

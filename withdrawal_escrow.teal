@@ -1,0 +1,69 @@
+#pragma version 2
+global GroupSize
+int 1
+==
+bnz branch_opt_in
+global GroupSize
+int 2
+==
+bnz branch_withdrawal
+int 0
+return
+branch_opt_in:
+txn TypeEnum
+int axfer
+==
+txn XferAsset
+int TMPL_ASSET_ID
+==
+&&
+txn AssetAmount
+int 0
+==
+&&
+txn Fee
+int 1000
+<=
+&&
+txn RekeyTo
+global ZeroAddress
+==
+&&
+txn AssetCloseTo
+global ZeroAddress
+==
+&&
+b end_contract
+branch_withdrawal:
+gtxn 0 TypeEnum
+int appl
+==
+gtxn 0 ApplicationID
+int TMPL_APP_ID
+==
+&&
+gtxn 0 OnCompletion
+int NoOp
+==
+&&
+gtxn 1 TypeEnum
+int axfer
+==
+&&
+gtxn 1 XferAsset
+int TMPL_ASSET_ID
+==
+&&
+gtxn 1 Fee
+int 1000
+<=
+&&
+gtxn 1 AssetCloseTo
+global ZeroAddress
+==
+&&
+gtxn 1 RekeyTo
+global ZeroAddress
+==
+&&
+end_contract:
