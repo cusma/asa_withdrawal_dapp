@@ -6,6 +6,6 @@ The solution architecture relies on Algorand Standard Asset ([ASA](https://devel
 
 ## Tip the Dev
 
-If you fund this opensoruce solution a valid learning example, consider tipping the Dev:
+If you find this solution useful as free and open source learning example, consider tipping the Dev:
 
 `XODGWLOMKUPTGL3ZV53H3GZZWMCTJVQ5B2BZICFD3STSLA2LPSH6V6RW3I`
