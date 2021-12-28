@@ -1,7 +1,9 @@
 from pyteal import *
 
+TEAL_VERSION = 2
 
-def withdrawal_escrow(app_id, asa_id):
+
+def withdrawal_escrow(app_id: int, asa_id: int):
 
     fee = Int(1000)
 
@@ -30,17 +32,16 @@ def withdrawal_escrow(app_id, asa_id):
         [Global.group_size() == Int(2), asa_withdraw]
     )
 
-    return compileTeal(program, Mode.Signature)
-
-
-# Use your TMPL_ASA_ID
-asa_id = 0
-
-# Use your TMPL_APP_ID
-app_id = 0
+    return compileTeal(program, Mode.Signature, version=TEAL_VERSION)
 
 
 if __name__ == "__main__":
+
+    # Use your TMPL_ASA_ID
+    asa_id = 0
+
+    # Use your TMPL_APP_ID
+    app_id = 0
 
     with open('withdrawal_escrow.teal', 'w') as f:
         compiled = withdrawal_escrow(app_id, asa_id)

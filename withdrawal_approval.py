@@ -1,5 +1,15 @@
 from pyteal import *
 
+TEAL_VERSION = 2
+
+# GLOBAL SCHEMA
+GLOBAL_INTS = 3
+GLOBAL_BYTES = 2
+
+# LOCAL SCHEMA
+LOCAL_INTS = 2
+LOCAL_BYTES = 0
+
 
 def withdrawal_approval():
 
@@ -144,7 +154,7 @@ def withdrawal_approval():
          handle_deleteapp],
         [Txn.on_completion() == OnComplete.NoOp, handle_noop]
     )
-    return compileTeal(program, Mode.Application)
+    return compileTeal(program, Mode.Application, version=TEAL_VERSION)
 
 
 if __name__ == "__main__":
