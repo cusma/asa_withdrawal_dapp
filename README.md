@@ -78,6 +78,19 @@ The given an `<app-id>` you can display ASA Staking dApp `info`:
 $ python3 asa_staking.py info <purestake-api-token> <app-id>
 ```
 
+```shell
+* ======================== STAKING dAPP SUMMARY ======================== *
+
+       APP ID:	123
+       ASA ID:	4
+       ESCROW:	XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+       LOCKING BLOCKS:	⏳ 250000
+       BOOKABLE FUNDS:	💰 1000000
+
+* ====================================================================== *
+```
+
 ### 5. Join the ASA Staking dApp
 
 As a user you can `join` the ASA Staking dApp identified by its `<app-id>`:
@@ -107,6 +120,18 @@ its `<app-id>`:
 
 ```shell
 $ python3 asa_staking.py status <purestake-api-token> <account> <app-id>
+```
+
+```shell
+* ======================= BOOKED STAKING SUMMARY ======================= *
+
+           APP ID:	123
+           ASA ID:	4
+
+           BOOKED AMOUNT:	42
+           REMANING LOCK:	Withdrawal ready! ️🔐⌛
+
+* ====================================================================== *
 ```
 
 ### 8. Withdraw your staked ASA
