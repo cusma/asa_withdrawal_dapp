@@ -3,6 +3,15 @@ ASA staking CLI (by cusma)
 Stake your ASA depositing an amount in the Staking dApp, wait the locking
 blocks and withdraw the doubled staked amount!
 
+⚠️  Please carefully read the instruction before any interaction with the CLI
+at: https://github.com/cusma/asa_withdrawal_dapp/blob/main/README.md
+
+⚠️  Any ASA amount must be expressed in _ASA minimal units_, taking into accunt
+_ASA decimals positions_. Check ASA Decimals with command: info.
+
+⚠️  Example: if ASA Decimals = 3, then to fund the dApp with 100 ASA units you
+must enter `<funding-amount>=100000` (as result of 100 * 10^3).
+
 Usage:
   asa_staking.py create <purestake-api-token> <mnemonic> <asset-id> <locking-blocks> <funding-amount>
   asa_staking.py info <purestake-api-token> <app-id>
@@ -427,6 +436,10 @@ def optin_to_application(algod_client: algod.AlgodClient, account: Account, app_
     return sign_send_wait(algod_client, account, optin_txn)
 
 
+def asa_info(algod_client: algod.AlgodClient, asa_id: int):
+    return algod_client.asset_info(asa_id)
+
+
 def info(algod_client: algod.AlgodClient, app_id: int):
 
     global_state = algod_client.application_info(app_id)['params']['global-state']
@@ -442,15 +455,18 @@ def info(algod_client: algod.AlgodClient, app_id: int):
         for item in global_state if item['key'] == 'V2l0aGRyYXdhbEJvb2thYmxlQW1vdW50'),
     }
 
+    asset = asa_info(algod_client, settings['asa_id'])
+    asset_decimals = asset['params']['decimals']
+
     summary = f"""
     * ======================== STAKING dAPP SUMMARY ======================== *
 
        APP ID:\t{app_id}
-       ASA ID:\t{settings['asa_id']}
+       ASA ID:\t{settings['asa_id']} (DECIMALS: {asset_decimals})
        ESCROW:\t{settings['escrow']}
 
        LOCKING BLOCKS:\t⏳ {settings['locking_blocks']}
-       BOOKABLE FUNDS:\t💰 {settings['bookable_funds']}
+       BOOKABLE FUNDS:\t💰 {settings['bookable_funds'] / 10 ** asset_decimals}
 
     * ====================================================================== *
     """
@@ -483,13 +499,16 @@ def status(algod_client: algod.AlgodClient, address: str, app_id: int):
         else:
             withdrawal_status = "Withdrawal already executed! 🔓💸"
 
+        asset = asa_info(algod_client, settings['asa_id'])
+        asset_decimals = asset['params']['decimals']
+
         booking_summary = f"""
         * ======================= BOOKED STAKING SUMMARY ======================= *
 
            APP ID:\t{app_id}
-           ASA ID:\t{settings['asa_id']}
+           ASA ID:\t{settings['asa_id']} (DECIMALS: {asset_decimals})
 
-           BOOKED AMOUNT:\t{booking_status['amount']}
+           BOOKED AMOUNT:\t{booking_status['amount']  / 10 ** asset_decimals}
            REMANING LOCK:\t{withdrawal_status}
 
         * ====================================================================== *

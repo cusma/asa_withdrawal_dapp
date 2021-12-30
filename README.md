@@ -64,6 +64,12 @@ command:
 2. Define the `<locking-blocks>`: users will lock their ASA for this period
 3. Define the `<funding-amount>`: as creator you will fund the ASA Staking dApp
 
+⚠️ Note that the `<funding-amount>` must be expressed in **ASA minimal units**, 
+taking into accunt **ASA decimals** positions.
+
+⚠️ Example: if ASA Decimals = 3, then to fund the dApp with 100 ASA units you 
+must enter `<funding-amount>=100000` (as result of 100 * 10^3).
+
 ```shell
 $ python3 asa_staking.py create <purestake-api-token> <mnemonic> <asset-id> <locking-blocks> <funding-amount>
 ```
@@ -106,6 +112,12 @@ $ python3 asa_staking.py join <purestake-api-token> <mnemonic> <app-id>
 As a user you can stake your ASA depositing a `<booking-amount>` of ASA in the 
 ASA Staking dApp identified by its `<app-id>`, wait the locking blocks and 
 withdraw the doubled staked amount!
+
+⚠️ Note that the `<booking-amount>` must be expressed in **ASA minimal units**, 
+taking into accunt **ASA decimals** positions.
+
+⚠️ Example: if ASA Decimals = 3, then to stake 50 ASA units you must ener 
+`<booking-amount>=50000` (as result of 50 * 10^3).
 
 ```shell
 $ python3 asa_staking.py booking <purestake-api-token> <mnemonic> <app-id> <booking-amount>
