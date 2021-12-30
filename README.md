@@ -28,17 +28,13 @@ $ python3 asa_staking.py -h
 ```
 
 ```shell
-ASA staking CLI (by cusma)
-Stake your ASA depositing an amount in the Staking dApp, wait the locking
-blocks and withdraw the doubled staked amount!
-
 Usage:
-  asa_staking.py create <purestake-api-token> <mnemonic> <asset-id> <locking-blocks> <funding-amount>
-  asa_staking.py info <purestake-api-token> <app-id>
-  asa_staking.py join <purestake-api-token> <mnemonic> <app-id>
-  asa_staking.py booking <purestake-api-token> <mnemonic> <app-id> <booking-amount>
-  asa_staking.py status <purestake-api-token> <account> <app-id>
-  asa_staking.py withdraw <purestake-api-token> <mnemonic> <app-id>
+  asa_staking.py create <purestake-api-token> <mnemonic> <asset-id> <locking-blocks> <funding-amount> [--test]
+  asa_staking.py info <purestake-api-token> <app-id> [--test]
+  asa_staking.py join <purestake-api-token> <mnemonic> <app-id> [--test]
+  asa_staking.py booking <purestake-api-token> <mnemonic> <app-id> <booking-amount> [--test]
+  asa_staking.py status <purestake-api-token> <account> <app-id> [--test]
+  asa_staking.py withdraw <purestake-api-token> <mnemonic> <app-id> [--test]
   asa_staking.py [--help]
 
 Commands:
@@ -50,10 +46,15 @@ Commands:
   withdraw    Withdraw staked amount with rewards.
 
 Options:
+  -t --test   Use Algorand TestNet.
   -h --help
 ```
 
-**NOTE:** keep your `<mnemonic>` safe! Although you will only use it on you local machine, is it strongly recommended to make use of a dedicated account just to interact with the ASA Staking dApp!
+⚠️ Keep your `<mnemonic>` safe! Although you will only use it on you local machine, is it strongly recommended to make use of a dedicated account just to interact with the ASA Staking dApp!
+
+#### Testing Mode
+1. Run the ASA Staking dApp on **Algorand TestNet** adding `-t` after commands.
+2. Run the ASA Staking dApp on **Algorand Sandbox** passing `""` as `<purestake-api-token>`. 
 
 ### 3. Create your own ASA Staking dApp
 
@@ -74,7 +75,7 @@ must enter `<funding-amount>=100000` (as result of 100 * 10^3).
 $ python3 asa_staking.py create <purestake-api-token> <mnemonic> <asset-id> <locking-blocks> <funding-amount>
 ```
 
-**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 ### 4. ASA Staking dApp info
 
@@ -92,7 +93,7 @@ As a user you can `join` the ASA Staking dApp identified by its `<app-id>`:
 $ python3 asa_staking.py join <purestake-api-token> <mnemonic> <app-id>
 ```
 
-**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 ### 6. Stake your ASA
 
@@ -110,7 +111,7 @@ taking into accunt **ASA decimals** positions.
 $ python3 asa_staking.py booking <purestake-api-token> <mnemonic> <app-id> <booking-amount>
 ```
 
-**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 ### 7. Check your staking status
 
@@ -130,7 +131,7 @@ identified by its `<app-id>` once the locking period expires:
 $ python3 asa_staking.py withdraw <purestake-api-token> <mnemonic> <app-id>
 ```
 
-**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 ## Tip the Dev
 

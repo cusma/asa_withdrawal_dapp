@@ -13,12 +13,12 @@ _ASA decimals positions_. Check ASA Decimals with command: info.
 must enter `<funding-amount>=100000` (as result of 100 * 10^3).
 
 Usage:
-  asa_staking.py create <purestake-api-token> <mnemonic> <asset-id> <locking-blocks> <funding-amount>
-  asa_staking.py info <purestake-api-token> <app-id>
-  asa_staking.py join <purestake-api-token> <mnemonic> <app-id>
-  asa_staking.py booking <purestake-api-token> <mnemonic> <app-id> <booking-amount>
-  asa_staking.py status <purestake-api-token> <account> <app-id>
-  asa_staking.py withdraw <purestake-api-token> <mnemonic> <app-id>
+  asa_staking.py create <purestake-api-token> <mnemonic> <asset-id> <locking-blocks> <funding-amount> [--test]
+  asa_staking.py info <purestake-api-token> <app-id> [--test]
+  asa_staking.py join <purestake-api-token> <mnemonic> <app-id> [--test]
+  asa_staking.py booking <purestake-api-token> <mnemonic> <app-id> <booking-amount> [--test]
+  asa_staking.py status <purestake-api-token> <account> <app-id> [--test]
+  asa_staking.py withdraw <purestake-api-token> <mnemonic> <app-id> [--test]
   asa_staking.py [--help]
 
 Commands:
@@ -30,6 +30,7 @@ Commands:
   withdraw    Withdraw staked amount with rewards.
 
 Options:
+  -t --test   Use Algorand TestNet.
   -h --help
 """
 
@@ -673,8 +674,11 @@ def main():
 
     # Clients
     if args['<purestake-api-token>']:
-        algod_address = 'https://mainnet-algorand.api.purestake.io/ps2'
-        indexer_address = 'https://mainnet-algorand.api.purestake.io/idx2'
+        network = 'mainnet'
+        if args['--test']:
+            network = 'testnet'
+        algod_address = 'https://' + network + '-algorand.api.purestake.io/ps2'
+        indexer_address = 'https://' + network + '-algorand.api.purestake.io/idx2'
         token = args['<purestake-api-token>']
         header = {'X-Api-key': token}
     else:
