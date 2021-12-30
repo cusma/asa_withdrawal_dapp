@@ -238,6 +238,7 @@ def withdrawal_approval():
 def withdrawal_clear():
     return compileTeal(Int(1), Mode.Application, version=2)
 
+
 def withdrawal_escrow(app_id: int, asa_id: int):
 
     fee = Int(1000)
