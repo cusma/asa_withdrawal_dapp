@@ -446,13 +446,13 @@ def info(algod_client: algod.AlgodClient, app_id: int):
     global_state = algod_client.application_info(app_id)['params']['global-state']
 
     settings = {
-        'asa_id': next(item['value']['uint']
+        'asa_id': next(int(item['value']['uint'])
         for item in global_state if item['key'] == 'QXNzZXRJRA=='),
         'escrow': next(encoding.encode_address(base64.b64decode(item['value']['bytes']))
         for item in global_state if item['key'] == 'QXNzZXRFc2Nyb3c='),
-        'locking_blocks': next(item['value']['uint']
+        'locking_blocks': next(int(item['value']['uint'])
         for item in global_state if item['key'] == 'V2l0aGRyYXdhbFByb2Nlc3NpbmdSb3VuZHM='),
-        'bookable_funds': next(item['value']['uint']
+        'bookable_funds': next(int(item['value']['uint'])
         for item in global_state if item['key'] == 'V2l0aGRyYXdhbEJvb2thYmxlQW1vdW50'),
     }
 
@@ -570,6 +570,15 @@ def asa_stake_booking(
     booking_amount: int,
 ):
     settings, summary = info(algod_client, app_id)
+
+    if booking_amount > settings['bookable_funds']:
+        if settings['bookable_funds'] == 0:
+            quit("\n⚠️  No more funds availabe for booking!")
+        else:
+            quit(
+                f"\n⚠️  Only {settings['bookable_funds']} still available for "
+                f"booking!")
+
     params = algod_client.suggested_params()
 
     booking_call_txn = ApplicationNoOpTxn(
